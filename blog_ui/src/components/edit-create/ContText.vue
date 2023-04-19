@@ -133,61 +133,61 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onBeforeMount, watch } from 'vue'
-import { api } from 'boot/axios'
-import { nfy } from 'src/utils/u-notify.js'
-import { useRoute, useRouter } from 'vue-router'
-import { useLoginRegiStore } from 'src/stores/login-regi'
+import { api } from "boot/axios"
+import { nfy } from "src/utils/u-notify.js"
+import { loginAuth, useLoginRegiStore } from "stores/login-regi"
+import { computed, onBeforeMount, reactive, ref, watch } from "vue"
+import { useRoute, useRouter } from "vue-router"
 
 let articleInfo = reactive({
-  title: '',
-  mdCont: '',
+  title: "",
+  mdCont: "",
   title_img: null,
   title_img_id: null,
   tags: [],
   category: null,
 })
-let tagText = ref('')
+let tagText = ref("")
 const cgList = ref([])
 const route = useRoute()
 const router = useRouter()
 const loginStore = useLoginRegiStore()
 const editToolbar = {
   boldFn: () => {
-    articleInfo.mdCont += '****'
+    articleInfo.mdCont += "****"
   },
   italicFn: () => {
-    articleInfo.mdCont += '**'
+    articleInfo.mdCont += "**"
   },
   delFn: () => {
-    articleInfo.mdCont += '~~'
+    articleInfo.mdCont += "~~"
   },
   underlineFn: () => {
-    articleInfo.mdCont += '__'
+    articleInfo.mdCont += "__"
   },
   linkFn: () => {
-    articleInfo.mdCont += '[]()'
+    articleInfo.mdCont += "[]()"
   },
   codeRowFn: () => {
-    articleInfo.mdCont += '``'
+    articleInfo.mdCont += "``"
   },
   codeBlockFn: () => {
-    articleInfo.mdCont += '```\n```'
+    articleInfo.mdCont += "```\n```"
   },
 }
 
 const pageTitle = computed(() => {
-  return route.path === '/edit' || route.params.id === '' ? '发布文章' : '更新文章'
+  return route.path === "/edit" || route.params.id === "" ? "发布文章" : "更新文章"
 })
 
 const addTag = () => {
   if (tagText.value) {
     if (!articleInfo.tags.includes(tagText.value)) {
       articleInfo.tags.push(tagText.value)
-      tagText.value = ''
+      tagText.value = ""
     } else {
-      tagText.value = ''
-      nfy('warning', '标签已存在', 1000, 'center')
+      tagText.value = ""
+      nfy("warning", "标签已存在", 1000, "center")
     }
   }
 }
@@ -201,11 +201,11 @@ const exitEdit = () => {
     articleInfo.tags.length ||
     articleInfo.category
   ) {
-    if (confirm('文章有更新，是否退出编辑？')) {
-      router.push({ name: 'ArticleList' })
+    if (confirm("文章有更新，是否退出编辑？")) {
+      router.push({ name: "ArticleList" })
     }
   } else {
-    router.push({ name: 'ArticleList' })
+    router.push({ name: "ArticleList" })
   }
 }
 
@@ -214,7 +214,7 @@ const isImportenceValid = () => {
   if (articleInfo.title && articleInfo.mdCont) {
     return true
   } else {
-    nfy('warning', '请填写文章标题和内容', 1000, 'center')
+    nfy("warning", "请填写文章标题和内容", 1000, "center")
     return false
   }
 }
@@ -224,14 +224,14 @@ watch(
   (val) => {
     if (val) {
       let formData = new FormData()
-      formData.append('img', val)
+      formData.append("img", val)
       api({
-        method: 'post',
-        url: 'titleimg/',
+        method: "post",
+        url: "titleimg/",
         data: formData,
         headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: 'Bearer ' + loginStore.token,
+          "Content-Type": "multipart/form-data",
+          Authorization: "Bearer " + localStorage.getItem("pa.token"),
         },
       }).then((res) => {
         articleInfo.title_img_id = res.data.id
@@ -243,7 +243,7 @@ watch(
 const createArticle = () => {
   api
     .post(
-      'article/',
+      "article/",
       {
         title: articleInfo.title,
         md_cont: articleInfo.mdCont,
@@ -253,16 +253,16 @@ const createArticle = () => {
       },
       {
         headers: {
-          Authorization: 'Bearer ' + loginStore.token,
+          Authorization: "Bearer " + localStorage.getItem("pa.token"),
         },
       }
     )
     .then((res) => {
-      nfy('positive', '发布成功', 1000, 'center')
-      router.push({ name: 'ArticleDetail', params: { id: res.data.id } })
+      nfy("positive", "发布成功", 1000, "center")
+      router.push({ name: "ArticleDetail", params: { id: res.data.id } })
     })
     .catch((err) => {
-      nfy('negative', `文章发布失败~${err.message}`, 1000, 'center')
+      nfy("negative", `文章发布失败~${err.message}`, 1000, "center")
     })
 }
 
@@ -271,23 +271,24 @@ const updateArticle = () => {}
 const publishArticle = () => {
   if (isImportenceValid()) {
     // 登录是否过期
-    if (loginStore.tokenIsExpired) {
-      loginStore.refreshToken()
-    }
-    if (!loginStore.isLogin) {
-      nfy('warning', '登录已过期，请重新登录')
-      return
-    }
-    if (route.path === '/edit' || route.query.id === '') {
-      createArticle()
-    } else {
-      updateArticle()
-    }
+    loginAuth().then((resp) => {
+      if (resp) {
+        // 发布文章
+        if (route.path === "/edit" || route.query.id === "") {
+          createArticle()
+        } else {
+          updateArticle()
+        }
+      } else {
+        nfy("negative", "登录已过期，请重新登录", 1000, "center")
+        loginStore.isShowLogin = true
+      }
+    })
   }
 }
 
 onBeforeMount(async () => {
-  const { data } = await api.get('category/')
+  const { data } = await api.get("category/")
   cgList.value = data
 })
 </script>

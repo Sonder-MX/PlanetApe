@@ -112,7 +112,7 @@
             <q-icon name="bi-calendar3 q-ml-sm"></q-icon>
             {{ pubDate }}
           </div>
-          <div class="q-mt-sm">
+          <div class="q-mt-sm" v-if="atcDetail.title_img">
             <q-img :src="atcDetail.title_img?.img" :ratio="16 / 8"></q-img>
           </div>
         </div>
@@ -209,13 +209,13 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount, computed } from 'vue'
-import { useRouter } from 'vue-router'
-import { useLoginRegiStore } from 'stores/login-regi'
-import { api } from 'boot/axios'
-import NavBar from 'components/NavBar.vue'
+import { api } from "boot/axios"
+import NavBar from "components/NavBar.vue"
+import { useLoginRegiStore } from "stores/login-regi"
+import { computed, onBeforeMount, ref } from "vue"
+import { useRouter } from "vue-router"
 
-let commentText = ref('')
+let commentText = ref("")
 const leftDrawerOpen = ref(true)
 const rightDrawerOpen = ref(false)
 const atcDetail = ref({})

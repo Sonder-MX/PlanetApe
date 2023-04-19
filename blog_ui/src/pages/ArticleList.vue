@@ -34,7 +34,7 @@
   <q-page padding>
     <q-card>
       <q-tabs
-        v-model="tabName"
+        v-model="searchUrlStore.tabName"
         dense
         class="text-grey"
         active-color="primary"
@@ -43,17 +43,15 @@
         inline-label
         narrow-indicator
         @update:model-value="handleTabChange">
-        <q-tab name="default" icon="bi-list-task" label="默认" />
+        <q-tab name="defu" icon="bi-list-task" label="默认" />
         <q-tab name="latest" icon="bi-calendar3" label="最新发布" />
-        <q-tab name="likes" icon="bi-star-fill" label="最多点赞" />
-        <q-tab name="comments" icon="bi-chat-left-text" label="最多评论" />
       </q-tabs>
 
       <q-separator />
 
-      <q-tab-panels v-model="tabName" animated>
-        <q-tab-panel :name="tabName">
-          <div class="row items-start q-gutter-lg">
+      <q-tab-panels v-model="searchUrlStore.tabName" animated>
+        <q-tab-panel :name="searchUrlStore.tabName">
+          <div v-if="aticleLists.length" class="row items-start q-gutter-lg">
             <q-card class="my-card" flat v-for="artc in aticleLists" :key="artc.id">
               <!-- 一条文章 -->
               <router-link :to="{ name: 'ArticleDetail', params: { id: artc.id } }">
@@ -90,16 +88,29 @@
               </router-link>
             </q-card>
           </div>
+
+          <!-- 无数据 -->
+          <div v-else class="row items-start q-gutter-lg">
+            <q-card class="my-card" flat>
+              <q-card-section class="q-pt-xs" style="width: 100%">
+                <div class="text-h6 q-pa-xl text-center">
+                  <q-icon name="bi-x-diamond-fill" />
+                  暂无数据
+                </div>
+              </q-card-section>
+            </q-card>
+          </div>
         </q-tab-panel>
       </q-tab-panels>
 
       <!-- 分页器 -->
       <div class="q-pa-lg flex flex-center">
         <q-pagination
-          v-model="pageName"
+          v-if="maxPage"
+          v-model="searchUrlStore.pageNum"
           color="light-blue"
-          :max="10"
-          :max-pages="6"
+          :max="maxPage"
+          :max-pages="4"
           boundary-numbers
           direction-links
           boundary-links
@@ -111,34 +122,47 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount } from 'vue'
-import { api } from 'boot/axios'
+import { api } from "boot/axios"
+import { useSearchUrlStore } from "stores/search-url"
+import { onMounted, ref, watch } from "vue"
 
-let slide = ref('one')
-let pageName = ref(1)
-let tabName = ref('default')
+let slide = ref("one")
+let maxPage = ref(0)
 let aticleLists = ref([])
-const crList = ['primary', 'secondary', 'accent', 'positive', 'negative']
+const crList = ["primary", "secondary", "accent", "positive", "negative"]
+const searchUrlStore = useSearchUrlStore()
 
 const randColor = () => {
   return crList[Math.floor(Math.random() * crList.length)]
 }
 
+// 获取文章列表
+const getArticleList = () => {
+  api.get(searchUrlStore.getUrl).then((res) => {
+    aticleLists.value = res.data.results
+    maxPage.value = res.data.count > 4 ? Math.ceil(res.data.count / 4) : 1
+  })
+}
+
 // 处理tab切换
 const handleTabChange = (val) => {
-  tabName.value = val
+  searchUrlStore.setTabName(val)
 }
 
 // 处理分页器切换
 const handlePageChange = (val) => {
-  pageName.value = val
+  searchUrlStore.setPageNum(val)
+  console.log(searchUrlStore.getUrl)
 }
 
-onBeforeMount(() => {
-  api.get('article').then((res) => {
-    aticleLists.value = res.data.results
-  })
-})
+watch(
+  () => searchUrlStore.getUrl,
+  (_) => {
+    getArticleList()
+  }
+)
+
+onMounted(() => getArticleList())
 </script>
 
 <style scoped lang="scss">

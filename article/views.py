@@ -1,11 +1,11 @@
 from rest_framework import viewsets
 
 from .filters import ArticleFilter
-from .models import AcImg, Article, Category, Tag, TitleImg
+from .models import AcImg, Article, Category, Tag, TitleImg, UserLike
 from .paginations import ArticlePagination
 from .permissions import IsSuperUserOrStuff
 from .serializers import (AcImgSerializer, ArticleDetailSerializer, ArticleListSerializer, CategoryDetailSerializer,
-                          CategorySerializer, TagSerializer, TitleImgSerializer)
+                          CategorySerializer, TagSerializer, TitleImgSerializer, UserLikeSerializer)
 
 
 class AcImgViewSet(viewsets.ModelViewSet):
@@ -55,3 +55,9 @@ class ArticleViewSet(viewsets.ModelViewSet):
             return ArticleListSerializer
         else:
             return ArticleDetailSerializer
+
+
+class UserLikeViewSet(viewsets.ModelViewSet):
+    """用户点赞视图集"""
+    queryset = UserLike.objects.all()
+    serializer_class = UserLikeSerializer

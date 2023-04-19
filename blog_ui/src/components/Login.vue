@@ -186,87 +186,89 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
-import { nfy } from 'src/utils/u-notify'
-import { api } from 'boot/axios'
-import { useRouter } from 'vue-router'
-import { useLoginRegiStore } from 'stores/login-regi'
+import { api } from "boot/axios"
+import { nfy } from "src/utils/u-notify"
+import { useLoginRegiStore } from "stores/login-regi"
+import { reactive, ref } from "vue"
+import { useRouter } from "vue-router"
 
 const loginRegiStore = useLoginRegiStore()
 const inForm = ref(null)
 const upForm = ref(null)
-let tabName = ref('sign-in') // 登录注册tab名称
+let tabName = ref("sign-in") // 登录注册tab名称
 let isPwd = ref(true) // 密码是否可见
-let email = ref('')
-let username = ref('')
-let upwd1 = ref('')
-let upwd2 = ref('')
+let email = ref("")
+let username = ref("")
+let upwd1 = ref("")
+let upwd2 = ref("")
 let errMsg = reactive({
-  upwd2: '密码长度为8~20位',
+  upwd2: "密码长度为8~20位",
   // inEmaill: { isShow: false, msg: '' },
 })
 const router = useRouter()
 
 const loginSubmit = () => {
   api
-    .post('token/', { email: email.value, password: upwd1.value })
+    .post("token/", { email: email.value, password: upwd1.value })
     .then(({ data }) => {
-      localStorage.setItem('pa.token', data.access)
-      localStorage.setItem('pa.token.refresh', data.refresh)
-      localStorage.setItem('pa.username', data.username)
-      localStorage.setItem('pa.avatar', data.avatar)
-      localStorage.setItem('pa.token.expire', data.expire)
-      localStorage.setItem('pa.is_staff', data.is_staff)
-      localStorage.setItem('pa.is_superuser', data.is_superuser)
-      localStorage.setItem('pa.is_login', true)
-      email.value = ''
-      upwd1.value = ''
+      localStorage.setItem("pa.token", data.access)
+      localStorage.setItem("pa.token.refresh", data.refresh)
+      localStorage.setItem("pa.username", data.username)
+      localStorage.setItem("pa.avatar", data.avatar)
+      localStorage.setItem("pa.token.expire", data.expire)
+      localStorage.setItem("pa.is_staff", data.is_staff)
+      localStorage.setItem("pa.is_superuser", data.is_superuser)
+      localStorage.setItem("pa.is_login", true)
+      email.value = ""
+      upwd1.value = ""
       loginRegiStore.isShowLogin = false
-      router.go(0)
-      nfy('positive', `欢迎 ~ ${data.username}`)
+      nfy("positive", `欢迎 ~ ${data.username}`)
+      setTimeout(() => {
+        router.go(0)
+      }, 500)
     })
     .catch(() => {
-      nfy('negative', '登录失败, 请检查用户名或密码！')
-      upwd1.value = ''
+      nfy("negative", "登录失败, 请检查用户名或密码！")
+      upwd1.value = ""
     })
 }
 
 const signUpSubmit = () => {
   if (upwd1.value !== upwd2.value) {
-    upwd2.value = ''
-    errMsg.upwd2 = '两次密码不一致！'
+    upwd2.value = ""
+    errMsg.upwd2 = "两次密码不一致！"
     return
   }
   api
-    .post('user/register/', {
+    .post("user/register/", {
       email: email.value,
       username: username.value,
       password: upwd1.value,
       password2: upwd2.value,
     })
     .then(() => {
-      email.value = ''
-      username.value = ''
-      upwd1.value = ''
-      upwd2.value = ''
+      email.value = ""
+      username.value = ""
+      upwd1.value = ""
+      upwd2.value = ""
       loginRegiStore.isShowLogin = false
-      nfy('positive', '注册成功！')
+      nfy("positive", "注册成功！")
     })
     .catch((err) => {
       const resp = err.response.data
       if (resp.email) {
-        if (resp.email[0].includes('已存在')) {
-          nfy('negative', '该邮箱已被注册！')
+        if (resp.email[0].includes("已存在")) {
+          nfy("negative", "该邮箱已被注册！")
           return
         }
-        nfy('negative', resp.email[0])
+        nfy("negative", resp.email[0])
         return
       }
       if (resp.username) {
-        nfy('negative', '该昵称已被注册！')
+        nfy("negative", "该昵称已被注册！")
         return
       }
-      nfy('negative', '注册失败！')
+      nfy("negative", "注册失败！")
     })
 }
 </script>

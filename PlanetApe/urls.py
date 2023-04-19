@@ -34,6 +34,8 @@ router.register(r'comment', comment_views.CommentViewSet, basename='comment')
 # 图片相关路由
 router.register(r'titleimg', article_views.TitleImgViewSet, basename='titleimg')
 router.register(r'acimg', article_views.AcImgViewSet, basename='acimg')
+# 用户相关路由
+router.register(r'userlike', article_views.UserLikeViewSet, basename='userlike')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

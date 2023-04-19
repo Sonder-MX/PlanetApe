@@ -8,8 +8,14 @@ class ArticleFilter(filters.FilterSet):
     title = filters.CharFilter(field_name='title', lookup_expr='icontains', label='文章标题模糊查询')
     category = filters.CharFilter(field_name='category__title', lookup_expr='icontains', label='分类名称模糊查询')
     tag = filters.CharFilter(field_name='tags__text', lookup_expr='icontains', label='标签名称模糊查询')
-    sort = filters.OrderingFilter(fields=(('comment_count', 'comment_count')), label='排序')
+    created = filters.OrderingFilter(fields=(('latest',)), label='创建时间排序', method='filter_created')
+
+    def filter_created(self, queryset, name, value):
+        if value[0] == 'latest':
+            return queryset.order_by('-created')
+        # 返回空的查询集
+        return queryset.none()
 
     class Meta:
         model = Article
-        fields = ['title', 'category', 'tag', 'sort']
+        fields = ['title', 'category', 'tag', 'created']

@@ -3,7 +3,7 @@ from rest_framework import serializers
 from comment.serializers import CommentSerializer
 from pa_user.serializers import UserDescSerializer
 
-from .models import AcImg, Article, Category, Tag, TitleImg
+from .models import AcImg, Article, Category, Tag, TitleImg, UserLike
 
 
 class TitleImgSerializer(serializers.ModelSerializer):
@@ -157,3 +157,27 @@ class ArticleDetailSerializer(ArticleBaseSerializer):
         model = Article
         fields = '__all__'
         extra_kwargs = {'md_cont': {'write_only': True}, 'created': {'read_only': True}, 'tags': {'read_only': True}}
+
+
+class UserLikeSerializer(serializers.ModelSerializer):
+
+    @staticmethod
+    def validate_article_id(value):
+        if not Article.objects.filter(id=value).exists() and value is not None:
+            raise serializers.ValidationError(f"Article with id {value} not exists.")
+        return value
+
+    class Meta:
+        model = UserLike
+        fields = '__all__'
+        extra_kwargs = {'created': {'read_only': True}}
+
+    # def create(self, validated_data):
+    #     user = self.context['request'].user
+    #     validated_data['user'] = user
+    #     return super().create(validated_data)
+
+    # def update(self, instance, validated_data):
+    #     user = self.context['request'].user
+    #     validated_data['user'] = user
+    #     return super().update(instance, validated_data)
