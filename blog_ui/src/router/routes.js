@@ -22,6 +22,16 @@ const routes = [
     component: () => import("pages/NewsPage.vue"),
   },
   {
+    path: "/about",
+    name: "About",
+    component: () => import("pages/AboutPage.vue"),
+  },
+  {
+    path: "/help",
+    name: "Help",
+    component: () => import("pages/HelpPage.vue"),
+  },
+  {
     path: "/:catchAll(.*)*",
     name: "NotFound",
     component: () => import("pages/ErrorNotFound.vue"),

@@ -4,18 +4,10 @@
       <NavBar />
     </q-header>
 
-    <q-drawer show-if-above :v-model="true" side="left" bordered class="bg-grey-2">
-      <ListLeft />
-    </q-drawer>
-
-    <q-drawer show-if-above :v-model="true" side="right" bordered class="bg-grey-2">
-      <ListRight />
-    </q-drawer>
-
     <q-page-container>
-      <router-view />
+      <q-page></q-page>
       <q-page-scroller position="bottom-right" :scroll-offset="150" :offset="[18, 18]">
-        <q-btn fab icon="bi-chevron-compact-up" color="accent" />
+        <q-btn fab icon="bi-chevron-compact-up" color="info" />
       </q-page-scroller>
     </q-page-container>
 
@@ -36,8 +28,6 @@
 
 <script setup>
 import NavBar from "components/NavBar.vue"
-import ListLeft from "components/home/ListLeft.vue"
-import ListRight from "components/home/ListRight.vue"
 </script>
 
 <style scoped lang="scss">

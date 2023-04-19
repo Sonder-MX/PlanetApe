@@ -61,6 +61,9 @@
           </div>
         </div>
       </q-page>
+      <q-page-scroller position="bottom-right" :scroll-offset="150" :offset="[18, 18]">
+        <q-btn fab icon="bi-chevron-compact-up" color="info" />
+      </q-page-scroller>
     </q-page-container>
 
     <q-footer elevated class="bg-blue-grey-2 text-black">
@@ -68,7 +71,9 @@
         <span class="text-overline">猿星球</span>
         <q-space />
         <div class="foot-a text-h6">
-          <a href="#" target="_blank"> <q-icon name="bi-github"></q-icon> </a>
+          <a href="https://github.com/Sonder-MX/PlanetApe" target="_blank">
+            <q-icon name="bi-github"></q-icon>
+          </a>
           <a href="#" target="_blank"> <q-icon name="bi-envelope-at-fill"></q-icon> </a>
         </div>
       </q-toolbar>

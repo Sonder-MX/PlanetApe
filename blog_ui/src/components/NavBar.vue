@@ -5,10 +5,10 @@
         <router-link :to="{ name: 'ArticleList' }"> 猿星球 </router-link>
       </strong>
     </span>
-    <q-tabs align="left" inline-label v-model="navTab">
+    <q-tabs align="left" inline-label v-model="navTab" @update:model-value="handleNavTabChange">
       <q-tab name="home" icon="bi-house" label="首页" />
       <q-tab name="news" icon="bi-newspaper" label="新闻专栏" />
-      <q-tab name="about" icon="bi-filter-circle" label="关于小站" />
+      <q-tab name="about" icon="bi-filter-circle" label="关于星球" />
       <q-tab name="help" icon="bi-info-square" label="帮助文档" />
     </q-tabs>
     <q-space />
@@ -56,11 +56,11 @@
 <script setup>
 import { useLoginRegiStore } from "stores/login-regi"
 import { useSearchUrlStore } from "stores/search-url"
-import { computed, ref } from "vue"
+import { computed, ref, watch } from "vue"
 import { useRoute, useRouter } from "vue-router"
 
 let searchKey = ref("")
-let navTab = ref("home")
+let navTab = ref(localStorage.getItem("navTab") || "home")
 const loginRegiStore = useLoginRegiStore()
 const searchUrl = useSearchUrlStore()
 const route = useRoute()
@@ -68,6 +68,21 @@ const router = useRouter()
 
 // 跳转到编辑创建页面
 const toEditCreate = () => router.push({ name: "EditCreate" })
+
+// 导航栏切换
+const handleNavTabChange = (val) => {
+  localStorage.setItem("navTab", val)
+  navTab.value = localStorage.getItem("navTab")
+  if (val === "home") {
+    router.push({ name: "ArticleList" })
+  } else if (val === "news") {
+    router.push({ name: "News" })
+  } else if (val === "about") {
+    router.push({ name: "About" })
+  } else if (val === "help") {
+    router.push({ name: "Help" })
+  }
+}
 
 // 除了编辑和创建页面，其他页面都显示发布文章按钮
 const isShowPublish = computed(() => route.name !== "EditCreate")
@@ -81,6 +96,16 @@ const celarSearch = () => {
   searchKey.value = ""
   searchUrl.setSearch("")
 }
+
+// 路由为编辑创建页面时，导航栏无选中状态
+watch(
+  () => route.name,
+  (val) => {
+    if (val === "EditCreate") {
+      navTab.value = ""
+    }
+  }
+)
 
 const logout = () => {
   router.go(0)

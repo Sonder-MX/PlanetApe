@@ -19,7 +19,9 @@
         <span class="text-overline">猿星球</span>
         <q-space />
         <div class="foot-a text-h6">
-          <a href="#" target="_blank"> <q-icon name="bi-github"></q-icon> </a>
+          <a href="https://github.com/Sonder-MX/PlanetApe" target="_blank">
+            <q-icon name="bi-github"></q-icon>
+          </a>
           <a href="#" target="_blank"> <q-icon name="bi-envelope-at-fill"></q-icon> </a>
         </div>
       </q-toolbar>
@@ -28,8 +30,8 @@
 </template>
 
 <script setup>
-import NavBar from 'components/NavBar.vue'
-import ContText from 'components/edit-create/ContText.vue'
+import NavBar from "components/NavBar.vue"
+import ContText from "components/edit-create/ContText.vue"
 </script>
 
 <style scoped lang="scss">
