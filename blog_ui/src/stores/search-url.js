@@ -19,7 +19,6 @@ export const useSearchUrlStore = defineStore("SearchUrl", {
       let tmpUrl = "article/"
       if (state.searchTitle || state.category || state.created) {
         tmpUrl += `?title=${state.searchTitle}&category=${state.category}&created=${state.created}`
-        console.log(tmpUrl)
         return tmpUrl
       }
       if (state.pageNum > 1) {

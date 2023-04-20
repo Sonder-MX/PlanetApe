@@ -178,7 +178,9 @@
         </q-tab-panels>
 
         <div class="text-center q-pa-sm">
-          <span class="text-red">*</span> 注册登录即表示同意 用户协议 和 隐私政策
+          <span class="text-red">*</span>
+          注册登录即表示同意
+          <a href="#">用户协议</a> 和 <a href="#">隐私政策</a>
         </div>
       </q-card>
     </q-dialog>
@@ -247,12 +249,12 @@ const signUpSubmit = () => {
       password2: upwd2.value,
     })
     .then(() => {
-      email.value = ""
+      tabName.value = "sign-in"
+      // email.value = ""
       username.value = ""
       upwd1.value = ""
       upwd2.value = ""
-      loginRegiStore.isShowLogin = false
-      nfy("positive", "注册成功！")
+      nfy("positive", "注册成功！去登录吧！")
     })
     .catch((err) => {
       const resp = err.response.data

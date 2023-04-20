@@ -11,6 +11,30 @@
       </NavBar>
     </q-header>
 
+    <!-- 目录 -->
+    <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered class="bg-grey-1">
+      <q-card flat bordered class="bg-blue-grey-1">
+        <q-card-actions>
+          <q-btn
+            color="primary"
+            label="返回上一页"
+            outline
+            dense
+            icon="bi-arrow-left-short"
+            @click="goBack" />
+        </q-card-actions>
+        <q-card-section>
+          <div class="text-h5"><q-icon name="bi-list-ul"></q-icon> 目 录</div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+          <q-scroll-area style="height: 65vh">
+            <div v-html="atcDetail.toc_html" id="toc"></div>
+          </q-scroll-area>
+        </q-card-section>
+      </q-card>
+    </q-drawer>
+
     <!-- 作者信息 -->
     <q-drawer show-if-above v-model="rightDrawerOpen" side="right" bordered>
       <q-scroll-area class="fit">
@@ -33,9 +57,9 @@
             </q-item-section>
           </q-item>
           <q-card-actions class="q-px-md" align="right">
-            <q-btn flat round color="red" icon="bi-person-plus">
+            <!-- <q-btn flat round color="red" icon="bi-person-plus">
               <q-tooltip transition-show="jump-down" transition-hide="jump-up"> 关注 </q-tooltip>
-            </q-btn>
+            </q-btn> -->
             <q-btn flat round color="accent" icon="bi-send">
               <q-tooltip transition-show="jump-down" transition-hide="jump-up"> 去主页 </q-tooltip>
             </q-btn>
@@ -66,31 +90,9 @@
       </q-scroll-area>
     </q-drawer>
 
-    <!-- 目录 -->
-    <q-drawer v-model="leftDrawerOpen" side="left" bordered class="bg-grey-1">
-      <q-card flat bordered class="q-ma-lg bg-blue-grey-1">
-        <q-card-actions>
-          <q-btn
-            color="primary"
-            label="返回上一页"
-            outline
-            dense
-            icon="bi-arrow-left-short"
-            @click="goBack" />
-        </q-card-actions>
-        <q-card-section>
-          <div class="text-h5"><q-icon name="bi-list-ul"></q-icon> 目 录</div>
-        </q-card-section>
-
-        <q-card-section class="q-pt-none">
-          <div v-html="atcDetail.toc_html" id="toc"></div>
-        </q-card-section>
-      </q-card>
-    </q-drawer>
-
     <!-- 文章 -->
     <q-page-container class="bg-grey-3">
-      <q-scroll-area style="height: 85vh">
+      <q-page>
         <!-- 头部 -->
         <div class="q-pa-lg">
           <div class="text-h4 text-center">{{ atcDetail.title }}</div>
@@ -178,10 +180,11 @@
             </q-card>
           </div>
         </div>
-      </q-scroll-area>
+      </q-page>
+
       <!-- 回到顶部 -->
       <q-page-scroller position="bottom-right" :scroll-offset="150" :offset="[18, 18]">
-        <q-btn fab icon="bi-chevron-compact-up" color="accent" />
+        <q-btn fab icon="bi-chevron-compact-up" color="secondary" />
       </q-page-scroller>
     </q-page-container>
 

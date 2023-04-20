@@ -108,8 +108,9 @@ watch(
 )
 
 const logout = () => {
-  router.go(0)
+  // router.go(0)
   loginRegiStore.logout()
+  router.push({ name: "ArticleList" })
 }
 </script>
 

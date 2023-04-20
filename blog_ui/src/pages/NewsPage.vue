@@ -154,4 +154,8 @@ p {
   color: rgb(24, 23, 65);
   text-decoration: none;
 }
+
+.gansu-news:hover {
+  text-decoration: underline;
+}
 </style>
