@@ -76,12 +76,8 @@
                       <span>
                         <q-icon name="bi-person-fill"></q-icon> {{ artc.author.username }}
                       </span>
-                      <span>
-                        <q-icon name="bi-hand-thumbs-up-fill"></q-icon> {{ artc.like_count }}</span
-                      >
-                      <span>
-                        <q-icon name="bi-chat-square-text"></q-icon> {{ artc.comment_count }}</span
-                      >
+                      <span> <q-icon name="bi-hand-thumbs-up-fill"></q-icon> {{ artc.lkct }}</span>
+                      <span> <q-icon name="bi-chat-square-text"></q-icon> {{ artc.cmtt }}</span>
                     </div>
                   </q-card-section>
                 </q-card-section>
@@ -140,7 +136,7 @@ const randColor = () => {
 const getArticleList = () => {
   api.get(searchUrlStore.getUrl).then((res) => {
     aticleLists.value = res.data.results
-    maxPage.value = res.data.count > 4 ? Math.ceil(res.data.count / 4) : 1
+    maxPage.value = res.data.count > 8 ? Math.ceil(res.data.count / 8) : 1
   })
 }
 

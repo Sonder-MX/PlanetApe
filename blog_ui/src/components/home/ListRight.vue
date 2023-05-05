@@ -54,17 +54,17 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref } from "vue"
 
 const iconObj = ref([
-  { id: 1, name: 'bi-1-circle-fill', color: 'red' },
-  { id: 2, name: 'bi-2-circle-fill', color: 'orange' },
-  { id: 3, name: 'bi-3-circle-fill', color: 'blue' },
+  { id: 1, name: "bi-1-circle-fill", color: "red" },
+  { id: 2, name: "bi-2-circle-fill", color: "orange" },
+  { id: 3, name: "bi-3-circle-fill", color: "blue" },
 ])
 const allList = ref([
-  { id: 1, title: 'Django + DRF 实现简单数据可视化大屏' },
-  { id: 2, title: '使用Tauri和Quasar开发桌面应用' },
-  { id: 3, title: '如何用Django与Vue实现前后端分离' },
+  { id: 1, title: "MySQL基础教程" },
+  { id: 2, title: "机器学习高频面试题" },
+  { id: 3, title: "Django基础学习" },
 ])
 </script>
 

@@ -109,7 +109,7 @@
                 <q-card-section class="col-7">
                   <div class="text-center text-h5">注 册</div>
                   <div class="q-mt-xl">
-                    <q-form class="q-gutter-md" ref="upForm" @submit="signUpSubmit">
+                    <q-form class="q-gutter-xs" ref="upForm" @submit="signUpSubmit">
                       <q-input
                         dense
                         filled
