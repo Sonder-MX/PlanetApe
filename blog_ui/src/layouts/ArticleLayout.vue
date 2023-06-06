@@ -1,7 +1,7 @@
 <template>
   <q-layout view="hHh Lpr lfr">
     <q-header elevated class="bg-primary text-white">
-      <NavBar />
+      <NavBar :isShowSearch="true" />
     </q-header>
 
     <q-drawer show-if-above :v-model="true" side="left" bordered class="bg-grey-2">

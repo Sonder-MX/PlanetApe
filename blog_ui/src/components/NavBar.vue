@@ -12,7 +12,7 @@
       <q-tab name="help" icon="bi-info-square" label="帮助文档" />
     </q-tabs>
     <q-space />
-    <div class="nav-search">
+    <div class="nav-search" v-if="isShowSearch">
       <q-input dark dense standout v-model="searchKey">
         <template v-slot:append>
           <q-icon v-if="searchKey" name="bi-x" class="cursor-pointer" @click="celarSearch" />
@@ -58,6 +58,13 @@ import { useLoginRegiStore } from "stores/login-regi"
 import { useSearchUrlStore } from "stores/search-url"
 import { computed, ref, watch } from "vue"
 import { useRoute, useRouter } from "vue-router"
+
+defineProps({
+  isShowSearch: {
+    type: Boolean,
+    default: false,
+  },
+})
 
 let searchKey = ref("")
 let navTab = ref(localStorage.getItem("navTab") || "home")

@@ -1,12 +1,10 @@
 <template>
-  <q-scroll-area class="fullscreen">
-    <router-view />
+  <router-view />
 
-    <!-- 登录Dialog -->
-    <Login />
-  </q-scroll-area>
+  <!-- 登录Dialog -->
+  <Login />
 </template>
 
 <script setup>
-import Login from './components/Login.vue'
+import Login from "./components/Login.vue"
 </script>

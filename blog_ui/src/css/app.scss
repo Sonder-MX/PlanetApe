@@ -1,9 +1,18 @@
-// app global css in SCSS form
-// div,
-// span,
-// p {
-//   caret-color: transparent;
-// }
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+  background-color: #f5f5f5;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: #c0c4cc;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 4px;
+  background-color: #f5f5f5;
+}
 
 input {
   caret-color: auto;

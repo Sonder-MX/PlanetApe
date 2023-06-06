@@ -8,7 +8,7 @@
       <q-page>
         <div class="bg-grey-1" style="margin: 0 20%">
           <div class="q-mx-xl">
-            <q-intersection v-for="hl in helpLeft" :key="hl.hid" transition="scale">
+            <div v-for="hl in helpLeft" :key="hl.hid" transition="scale">
               <q-card class="q-mx-md q-my-lg" bordered>
                 <q-card-section>
                   <div class="text-overline text-orange-9">Tip {{ hl.hid }}</div>
@@ -35,7 +35,7 @@
                   </div>
                 </q-slide-transition>
               </q-card>
-            </q-intersection>
+            </div>
           </div>
         </div>
       </q-page>
