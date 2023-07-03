@@ -143,7 +143,11 @@ REST_FRAMEWORK = {
     # 过滤器
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     # 使用 simple_jwt 认证机制
-    'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework_simplejwt.authentication.JWTAuthentication',)
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',  # jwt
+        'rest_framework.authentication.BasicAuthentication',  # 基础认证
+        'rest_framework.authentication.SessionAuthentication',  # session 认证
+    ],
 }
 
 # simple_jwt 认证机制
