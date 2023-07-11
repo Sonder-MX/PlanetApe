@@ -153,6 +153,6 @@ REST_FRAMEWORK = {
 # simple_jwt 认证机制
 SIMPLE_JWT = {
     # 'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10),  # token 有效期
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10),  # token 有效期
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),  # 刷新 token 有效期
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=6),  # token 有效期
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=30),  # 刷新 token 有效期
 }
