@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django_redis import get_redis_connection
 from markdown import Markdown
 from markdown.extensions import codehilite, extra, toc
 
@@ -8,15 +9,16 @@ from pa_user.models import User
 
 # utils
 def set_title_img_path(instance, filename):
-    return 'title_img/%s/%s' % (instance.author.id, filename)
+    return "title_img/%s/%s" % (instance.author.id, filename)
 
 
 class Tag(models.Model):
     """文章标签"""
+
     text = models.CharField(max_length=30)
 
     class Meta:
-        ordering = ['-id']
+        ordering = ["-id"]
 
     def __str__(self):
         return self.text
@@ -24,6 +26,7 @@ class Tag(models.Model):
 
 class Category(models.Model):
     """文章分类"""
+
     title = models.CharField(max_length=32)
     icon_name = models.CharField(max_length=32, unique=True)
 
@@ -33,18 +36,20 @@ class Category(models.Model):
 
 class TitleImg(models.Model):
     """标题图"""
+
     img = models.ImageField(upload_to="title_img/%Y/%m-%d", verbose_name="标题图", blank=True, null=True)
 
 
 class Article(models.Model):
     """博客文章 model"""
-    author = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='articles')
+
+    author = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name="articles")
     # 分类
-    category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.SET_NULL, related_name='articles')
+    category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.SET_NULL, related_name="articles")
     # 标签
-    tags = models.ManyToManyField(Tag, blank=True, related_name='articles')
+    tags = models.ManyToManyField(Tag, blank=True, related_name="articles")
     # 标题图
-    title_img = models.ForeignKey(TitleImg, null=True, blank=True, on_delete=models.SET_NULL, related_name='articles')
+    title_img = models.ForeignKey(TitleImg, null=True, blank=True, on_delete=models.SET_NULL, related_name="articles")
     # 标题
     title = models.CharField(max_length=100)
     # 正文
@@ -68,29 +73,38 @@ class Article(models.Model):
         return self.title
 
     def md_change_html(self):
-        md = Markdown(extensions=[
-            extra.ExtraExtension(),
-            codehilite.CodeHiliteExtension(),  # pip install pygments
-            toc.TocExtension(),
-        ])
+        md = Markdown(
+            extensions=[
+                extra.ExtraExtension(),
+                codehilite.CodeHiliteExtension(),  # pip install pygments
+                toc.TocExtension(),
+            ]
+        )
         body = md.convert(self.md_cont)
         return md.toc, body  # 渲染后的目录和正文
 
+    # 重写 save 方法，每次保存时，清除缓存
+    # def save(self, *args, **kwargs):
+    #     super().save(*args, **kwargs)
+    #     conn = get_redis_connection("default")
+    #     conn.delete(":1:article_list")
+
 
 class AcImg(models.Model):
-    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='article_img')
-    img = models.ImageField(upload_to='acimg/%Y/%m-%d/', blank=True, null=True)
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name="article_img")
+    img = models.ImageField(upload_to="acimg/%Y/%m-%d/", blank=True, null=True)
 
 
 class UserLike(models.Model):
     """用户点赞文章的记录"""
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_like')
-    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='article_like')
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_like")
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name="article_like")
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('user', 'article')  # 用户点赞的文章不能重复
-        ordering = ['-created']
+        unique_together = ("user", "article")  # 用户点赞的文章不能重复
+        ordering = ["-created"]
 
     def __str__(self):
         return self.user.username
